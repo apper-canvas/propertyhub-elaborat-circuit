@@ -1,16 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
 import SearchBar from "@/components/molecules/SearchBar";
 import ApperIcon from "@/components/ApperIcon";
 import { savedPropertyService } from "@/services/api/savedPropertyService";
+import { AuthContext } from "@/App";
 
 export default function Header({ onSearch }) {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [savedCount, setSavedCount] = useState(0);
+  const { user } = useSelector((state) => state.user);
+  const { logout } = useContext(AuthContext);
 
   useEffect(() => {
     loadSavedCount();
@@ -22,6 +26,15 @@ export default function Header({ onSearch }) {
       setSavedCount(saved.length);
     } catch (error) {
       console.error("Failed to load saved properties count:", error);
+      setSavedCount(0);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   };
 
@@ -78,6 +91,22 @@ export default function Header({ onSearch }) {
                 )}
               </Link>
             ))}
+            
+            {/* User Menu */}
+            <div className="flex items-center space-x-2 ml-4 pl-4 border-l border-gray-300">
+              <span className="text-sm text-gray-600">
+                Hello, {user?.firstName || 'User'}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="text-gray-600 hover:text-gray-800"
+              >
+                <ApperIcon name="LogOut" className="h-4 w-4 mr-1" />
+                Logout
+              </Button>
+            </div>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -131,6 +160,22 @@ export default function Header({ onSearch }) {
                   )}
                 </Link>
               ))}
+              
+              {/* Mobile User Section */}
+              <div className="border-t border-gray-200 pt-4 mt-4">
+                <div className="px-4 py-2 text-sm text-gray-600">
+                  Hello, {user?.firstName || 'User'}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="w-full justify-start text-gray-600 hover:text-gray-800"
+                >
+                  <ApperIcon name="LogOut" className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
             </nav>
           </motion.div>
         )}
