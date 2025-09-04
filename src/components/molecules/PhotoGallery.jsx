@@ -1,26 +1,44 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 
-export default function PhotoGallery({ images, title }) {
+export default function PhotoGallery({ images = [], title = "Gallery" }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % images.length);
+const nextImage = () => {
+    if (images && images.length > 0) {
+      setSelectedImage((prev) => (prev + 1) % images.length);
+    }
   };
 
   const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
+    if (images && images.length > 0) {
+      setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
+    }
+}
   };
 
+  // Early return for empty or invalid images
+  if (!images || !Array.isArray(images) || images.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-gray-100 flex items-center justify-center">
+          <div className="text-center text-gray-500">
+            <ApperIcon name="ImageOff" className="h-12 w-12 mx-auto mb-2 opacity-50" />
+            <p>No images available</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-4">
       {/* Main Image */}
       <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-gray-100">
-        <img
-          src={images[selectedImage]}
+<img
+          src={images[selectedImage] || ''}
           alt={`${title} - Image ${selectedImage + 1}`}
           className="w-full h-full object-cover cursor-pointer"
           onClick={() => setIsFullscreen(true)}
@@ -45,8 +63,8 @@ export default function PhotoGallery({ images, title }) {
         )}
 
         {/* Image Counter */}
-        <div className="absolute bottom-4 left-4 px-3 py-1 bg-black/50 text-white text-sm rounded-full">
-          {selectedImage + 1} / {images.length}
+<div className="absolute bottom-4 left-4 px-3 py-1 bg-black/50 text-white text-sm rounded-full">
+          {selectedImage + 1} / {images?.length || 0}
         </div>
 
         {/* Fullscreen Button */}
@@ -92,8 +110,8 @@ export default function PhotoGallery({ images, title }) {
             onClick={() => setIsFullscreen(false)}
           >
             <div className="relative max-w-7xl max-h-full p-4">
-              <img
-                src={images[selectedImage]}
+<img
+                src={images[selectedImage] || ''}
                 alt={`${title} - Fullscreen`}
                 className="max-w-full max-h-full object-contain"
                 onClick={(e) => e.stopPropagation()}
@@ -126,8 +144,8 @@ export default function PhotoGallery({ images, title }) {
               )}
 
               {/* Image Counter in Fullscreen */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black/50 text-white rounded-full">
-                {selectedImage + 1} / {images.length}
+<div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black/50 text-white rounded-full">
+                {selectedImage + 1} / {images?.length || 0}
               </div>
             </div>
           </motion.div>
