@@ -13,13 +13,11 @@ const nextImage = () => {
     }
   };
 
-  const prevImage = () => {
+const prevImage = () => {
     if (images && images.length > 0) {
       setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
     }
-}
   };
-
   // Early return for empty or invalid images
   if (!images || !Array.isArray(images) || images.length === 0) {
     return (
@@ -34,10 +32,11 @@ const nextImage = () => {
     );
   }
 
-  return (
+return (
+    <div className="space-y-4">
       {/* Main Image */}
       <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-gray-100">
-<img
+        <img
           src={images[selectedImage] || ''}
           alt={`${title} - Image ${selectedImage + 1}`}
           className="w-full h-full object-cover cursor-pointer"
@@ -63,7 +62,7 @@ const nextImage = () => {
         )}
 
         {/* Image Counter */}
-<div className="absolute bottom-4 left-4 px-3 py-1 bg-black/50 text-white text-sm rounded-full">
+        <div className="absolute bottom-4 left-4 px-3 py-1 bg-black/50 text-white text-sm rounded-full">
           {selectedImage + 1} / {images?.length || 0}
         </div>
 
@@ -110,7 +109,7 @@ const nextImage = () => {
             onClick={() => setIsFullscreen(false)}
           >
             <div className="relative max-w-7xl max-h-full p-4">
-<img
+              <img
                 src={images[selectedImage] || ''}
                 alt={`${title} - Fullscreen`}
                 className="max-w-full max-h-full object-contain"
@@ -144,13 +143,13 @@ const nextImage = () => {
               )}
 
               {/* Image Counter in Fullscreen */}
-<div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black/50 text-white rounded-full">
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black/50 text-white rounded-full">
                 {selectedImage + 1} / {images?.length || 0}
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+</div>
   );
 }
