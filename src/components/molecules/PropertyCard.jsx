@@ -44,9 +44,9 @@ export default function PropertyCard({ property, isSaved = false, onSaveToggle }
     <Card className="property-card-hover cursor-pointer overflow-hidden group">
       <div className="relative" onClick={handleViewDetails}>
         <div className="aspect-[4/3] overflow-hidden">
-          <img
-            src={property.images[0]}
-            alt={property.title}
+<img
+            src={property.images?.[0] || '/api/placeholder/400/300'}
+            alt={property.title || 'Property'}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>
